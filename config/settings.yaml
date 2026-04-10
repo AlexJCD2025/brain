@@ -1,0 +1,15 @@
+data:
+  default_start_date: "2020-01-01"
+  cache_dir: "data/processed"
+  
+backtest:
+  initial_cash: 100000.0
+  commission: 0.0003
+  slipage: 0.001
+
+telegram:
+  chat_id: null
+
+logging:
+  level: INFO
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
