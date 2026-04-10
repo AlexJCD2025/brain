@@ -450,6 +450,462 @@ class StrategyGenerator:
         
         return signals
     
+    # ============================================================
+    # 更多新增策略 - 经典技术指标
+    # ============================================================
+    
+    @staticmethod
+    def ichimoku(data: pd.DataFrame, 
+                 tenkan_period: int = 9, 
+                 kijun_period: int = 26, 
+                 senkou_b_period: int = 52) -> pd.Series:
+        """
+        Ichimoku Cloud (一目均衡表) 策略
+        
+        日本经典趋势指标，包含5条线:
+        - Tenkan-sen (转换线): 短周期中线
+        - Kijun-sen (基准线): 中周期中线  
+        - Senkou Span A (先行上线): 未来26日的(Tenkan+Kijun)/2
+        - Senkou Span B (先行下线): 未来26日的52周期中线
+        - Chikou Span (延迟线): 26日前的收盘价
+        
+        Args:
+            data: OHLCV DataFrame
+            tenkan_period: 转换线周期 (默认9)
+            kijun_period: 基准线周期 (默认26)
+            senkou_b_period: 先行下线周期 (默认52)
+            
+        Returns:
+            信号序列
+            
+        交易逻辑:
+            价格上穿云层买入，下穿云层卖出
+        """
+        high = data['high']
+        low = data['low']
+        close = data['close']
+        
+        # Tenkan-sen (转换线): (9周期最高+最低)/2
+        tenkan_sen = (high.rolling(window=tenkan_period).max() + 
+                      low.rolling(window=tenkan_period).min()) / 2
+        
+        # Kijun-sen (基准线): (26周期最高+最低)/2
+        kijun_sen = (high.rolling(window=kijun_period).max() + 
+                     low.rolling(window=kijun_period).min()) / 2
+        
+        # Senkou Span A (先行上线): (Tenkan + Kijun) / 2，前移26日
+        senkou_span_a = ((tenkan_sen + kijun_sen) / 2).shift(kijun_period)
+        
+        # Senkou Span B (先行下线): (52周期最高+最低)/2，前移26日
+        senkou_span_b = ((high.rolling(window=senkou_b_period).max() + 
+                          low.rolling(window=senkou_b_period).min()) / 2).shift(kijun_period)
+        
+        # 云层 (Kumo)
+        kumo_top = senkou_span_a.combine(senkou_span_b, max)
+        kumo_bottom = senkou_span_a.combine(senkou_span_b, min)
+        
+        signals = pd.Series(0, index=data.index)
+        
+        # 价格上穿云层买入，下穿云层卖出
+        above_cloud = close > kumo_top
+        below_cloud = close < kumo_bottom
+        
+        buy_signal = above_cloud & (~above_cloud.shift(1).fillna(False))
+        sell_signal = below_cloud & (~below_cloud.shift(1).fillna(False))
+        
+        signals[buy_signal] = 1
+        signals[sell_signal] = -1
+        
+        return signals
+    
+    @staticmethod
+    def parabolic_sar(data: pd.DataFrame, 
+                      af_start: float = 0.02, 
+                      af_max: float = 0.20) -> pd.Series:
+        """
+        Parabolic SAR (抛物线SAR) 策略
+        
+        Welles Wilder开发的趋势追踪指标
+        
+        Args:
+            data: OHLCV DataFrame
+            af_start: 初始加速因子 (默认0.02)
+            af_max: 最大加速因子 (默认0.20)
+            
+        Returns:
+            信号序列
+            
+        交易逻辑:
+            价格上穿SAR买入，下穿SAR卖出
+        """
+        high = data['high']
+        low = data['low']
+        close = data['close']
+        
+        # 简化版SAR计算
+        sar = pd.Series(index=data.index, dtype=float)
+        trend = pd.Series(index=data.index, dtype=float)
+        af = pd.Series(index=data.index, dtype=float)
+        ep = pd.Series(index=data.index, dtype=float)
+        
+        # 初始化
+        sar.iloc[0] = low.iloc[0]
+        trend.iloc[0] = 1  # 1为多头，-1为空头
+        af.iloc[0] = af_start
+        ep.iloc[0] = high.iloc[0]
+        
+        for i in range(1, len(data)):
+            # 计算SAR
+            sar.iloc[i] = sar.iloc[i-1] + af.iloc[i-1] * (ep.iloc[i-1] - sar.iloc[i-1])
+            
+            # 检查趋势反转
+            if trend.iloc[i-1] == 1:  # 多头
+                if low.iloc[i] < sar.iloc[i]:  # 跌破SAR，转为空头
+                    trend.iloc[i] = -1
+                    sar.iloc[i] = ep.iloc[i-1]
+                    af.iloc[i] = af_start
+                    ep.iloc[i] = low.iloc[i]
+                else:  # 继续多头
+                    trend.iloc[i] = 1
+                    if high.iloc[i] > ep.iloc[i-1]:  # 创新高
+                        ep.iloc[i] = high.iloc[i]
+                        af.iloc[i] = min(af.iloc[i-1] + af_start, af_max)
+                    else:
+                        ep.iloc[i] = ep.iloc[i-1]
+                        af.iloc[i] = af.iloc[i-1]
+            else:  # 空头
+                if high.iloc[i] > sar.iloc[i]:  # 突破SAR，转为多头
+                    trend.iloc[i] = 1
+                    sar.iloc[i] = ep.iloc[i-1]
+                    af.iloc[i] = af_start
+                    ep.iloc[i] = high.iloc[i]
+                else:  # 继续空头
+                    trend.iloc[i] = -1
+                    if low.iloc[i] < ep.iloc[i-1]:  # 创新低
+                        ep.iloc[i] = low.iloc[i]
+                        af.iloc[i] = min(af.iloc[i-1] + af_start, af_max)
+                    else:
+                        ep.iloc[i] = ep.iloc[i-1]
+                        af.iloc[i] = af.iloc[i-1]
+        
+        signals = pd.Series(0, index=data.index)
+        
+        # 趋势转变时产生信号
+        buy_signal = (trend == 1) & (trend.shift(1) == -1)
+        sell_signal = (trend == -1) & (trend.shift(1) == 1)
+        
+        signals[buy_signal] = 1
+        signals[sell_signal] = -1
+        
+        return signals
+    
+    @staticmethod
+    def obv(data: pd.DataFrame) -> pd.Series:
+        """
+        OBV (On Balance Volume) 能量潮策略
+        
+        Joseph Granville开发的量价指标
+        
+        Args:
+            data: OHLCV DataFrame
+            
+        Returns:
+            信号序列
+            
+        逻辑:
+            价格上涨: OBV += 成交量
+            价格下跌: OBV -= 成交量
+            OBV突破均线买入，跌破卖出
+        """
+        close = data['close']
+        volume = data['volume']
+        
+        # 计算OBV
+        obv = pd.Series(index=data.index, dtype=float)
+        obv.iloc[0] = volume.iloc[0]
+        
+        for i in range(1, len(data)):
+            if close.iloc[i] > close.iloc[i-1]:
+                obv.iloc[i] = obv.iloc[i-1] + volume.iloc[i]
+            elif close.iloc[i] < close.iloc[i-1]:
+                obv.iloc[i] = obv.iloc[i-1] - volume.iloc[i]
+            else:
+                obv.iloc[i] = obv.iloc[i-1]
+        
+        # OBV均线
+        obv_ma = obv.rolling(window=20).mean()
+        
+        signals = pd.Series(0, index=data.index)
+        
+        # OBV上穿均线买入，下穿卖出
+        buy_signal = (obv > obv_ma) & (obv.shift(1) <= obv_ma.shift(1))
+        sell_signal = (obv < obv_ma) & (obv.shift(1) >= obv_ma.shift(1))
+        
+        signals[buy_signal] = 1
+        signals[sell_signal] = -1
+        
+        return signals
+    
+    @staticmethod
+    def adx(data: pd.DataFrame, period: int = 14, threshold: float = 25.0) -> pd.Series:
+        """
+        ADX (Average Directional Index) 平均趋向指数策略
+        
+        Welles Wilder开发的趋势强度指标
+        
+        Args:
+            data: OHLCV DataFrame
+            period: 周期 (默认14)
+            threshold: 趋势强度阈值 (默认25)
+            
+        Returns:
+            信号序列
+            
+        逻辑:
+            ADX > 25: 趋势市场，+DI > -DI买入，反之卖出
+            ADX < 25: 震荡市场，不交易
+        """
+        high = data['high']
+        low = data['low']
+        close = data['close']
+        
+        # 计算True Range
+        tr1 = high - low
+        tr2 = abs(high - close.shift(1))
+        tr3 = abs(low - close.shift(1))
+        tr = pd.concat([tr1, tr2, tr3], axis=1).max(axis=1)
+        
+        # 计算+DM和-DM
+        plus_dm = high.diff()
+        minus_dm = -low.diff()
+        
+        plus_dm[plus_dm < 0] = 0
+        minus_dm[minus_dm < 0] = 0
+        
+        plus_dm[plus_dm <= minus_dm] = 0
+        minus_dm[minus_dm <= plus_dm] = 0
+        
+        # 平滑
+        atr = tr.rolling(window=period).mean()
+        plus_di = 100 * plus_dm.rolling(window=period).mean() / atr
+        minus_di = 100 * minus_dm.rolling(window=period).mean() / atr
+        
+        # 计算DX和ADX
+        dx = 100 * abs(plus_di - minus_di) / (plus_di + minus_di)
+        adx = dx.rolling(window=period).mean()
+        
+        signals = pd.Series(0, index=data.index)
+        
+        # 趋势市场才交易
+        trending = adx > threshold
+        
+        # +DI > -DI买入，反之卖出
+        buy_signal = trending & (plus_di > minus_di) & (plus_di.shift(1) <= minus_di.shift(1))
+        sell_signal = trending & (plus_di < minus_di) & (plus_di.shift(1) >= minus_di.shift(1))
+        
+        signals[buy_signal] = 1
+        signals[sell_signal] = -1
+        
+        return signals
+    
+    @staticmethod
+    def mfi(data: pd.DataFrame, period: int = 14, overbought: float = 80, oversold: float = 20) -> pd.Series:
+        """
+        MFI (Money Flow Index) 资金流量指标策略
+        
+        类似RSI但考虑成交量
+        
+        Args:
+            data: OHLCV DataFrame
+            period: 周期 (默认14)
+            overbought: 超买阈值 (默认80)
+            oversold: 超卖阈值 (默认20)
+            
+        Returns:
+            信号序列
+            
+        逻辑:
+            MFI < 20 超卖买入
+            MFI > 80 超买卖出
+        """
+        high = data['high']
+        low = data['low']
+        close = data['close']
+        volume = data['volume']
+        
+        # 典型价格
+        typical_price = (high + low + close) / 3
+        
+        # 原始资金流
+        raw_money_flow = typical_price * volume
+        
+        # 资金流方向
+        money_flow_sign = (typical_price > typical_price.shift(1)).astype(int)
+        money_flow_sign[typical_price < typical_price.shift(1)] = -1
+        
+        # 正负资金流
+        positive_flow = raw_money_flow.copy()
+        positive_flow[money_flow_sign <= 0] = 0
+        
+        negative_flow = raw_money_flow.copy()
+        negative_flow[money_flow_sign >= 0] = 0
+        
+        # 资金流比率
+        positive_sum = positive_flow.rolling(window=period).sum()
+        negative_sum = negative_flow.rolling(window=period).sum()
+        
+        money_flow_ratio = positive_sum / negative_sum
+        
+        # MFI
+        mfi = 100 - (100 / (1 + money_flow_ratio))
+        
+        signals = pd.Series(0, index=data.index)
+        
+        # MFI低于超卖线买入，高于超买线卖出
+        buy_signal = (mfi < oversold) & (mfi.shift(1) >= oversold)
+        sell_signal = (mfi > overbought) & (mfi.shift(1) <= overbought)
+        
+        signals[buy_signal] = 1
+        signals[sell_signal] = -1
+        
+        return signals
+    
+    @staticmethod
+    def vwap(data: pd.DataFrame, period: int = 20) -> pd.Series:
+        """
+        VWAP (Volume Weighted Average Price) 成交量加权平均价策略
+        
+        机构常用指标
+        
+        Args:
+            data: OHLCV DataFrame
+            period: VWAP周期 (默认20)
+            
+        Returns:
+            信号序列
+            
+        逻辑:
+            价格上穿VWAP买入，下穿卖出
+        """
+        high = data['high']
+        low = data['low']
+        close = data['close']
+        volume = data['volume']
+        
+        # 典型价格
+        typical_price = (high + low + close) / 3
+        
+        # VWAP
+        vwap = (typical_price * volume).rolling(window=period).sum() / volume.rolling(window=period).sum()
+        
+        signals = pd.Series(0, index=data.index)
+        
+        # 价格上穿VWAP买入，下穿卖出
+        buy_signal = (close > vwap) & (close.shift(1) <= vwap.shift(1))
+        sell_signal = (close < vwap) & (close.shift(1) >= vwap.shift(1))
+        
+        signals[buy_signal] = 1
+        signals[sell_signal] = -1
+        
+        return signals
+    
+    @staticmethod
+    def stochastic(data: pd.DataFrame, 
+                   k_period: int = 14, 
+                   d_period: int = 3, 
+                   overbought: float = 80, 
+                   oversold: float = 20) -> pd.Series:
+        """
+        Stochastic Oscillator (随机震荡指标)
+        
+        与KDJ类似但更简单
+        
+        Args:
+            data: OHLCV DataFrame
+            k_period: %K周期 (默认14)
+            d_period: %D周期 (默认3)
+            overbought: 超买阈值 (默认80)
+            oversold: 超卖阈值 (默认20)
+            
+        Returns:
+            信号序列
+            
+        逻辑:
+            %K < 20 超卖买入
+            %K > 80 超买卖出
+        """
+        high = data['high']
+        low = data['low']
+        close = data['close']
+        
+        # 计算%K
+        lowest_low = low.rolling(window=k_period).min()
+        highest_high = high.rolling(window=k_period).max()
+        
+        k = 100 * (close - lowest_low) / (highest_high - lowest_low)
+        
+        # 计算%D (%K的移动平均)
+        d = k.rolling(window=d_period).mean()
+        
+        signals = pd.Series(0, index=data.index)
+        
+        # %K低于超卖线买入，高于超买线卖出
+        buy_signal = (k < oversold) & (k.shift(1) >= oversold)
+        sell_signal = (k > overbought) & (k.shift(1) <= overbought)
+        
+        signals[buy_signal] = 1
+        signals[sell_signal] = -1
+        
+        return signals
+    
+    @staticmethod
+    def heikin_ashi(data: pd.DataFrame) -> pd.Series:
+        """
+        Heikin-Ashi (平均K线) 策略
+        
+        日本蜡烛图变体，过滤噪音
+        
+        Args:
+            data: OHLCV DataFrame
+            
+        Returns:
+            信号序列
+            
+        逻辑:
+            连续3根阳线买入，连续3根阴线卖出
+        """
+        open_price = data['open']
+        high = data['high']
+        low = data['low']
+        close = data['close']
+        
+        # 计算Heikin-Ashi蜡烛
+        ha_close = (open_price + high + low + close) / 4
+        ha_open = (open_price.shift(1) + close.shift(1)) / 2
+        ha_open.iloc[0] = (open_price.iloc[0] + close.iloc[0]) / 2
+        
+        # 填充na
+        ha_open = ha_open.ffill()
+        
+        # 判断阳线/阴线
+        ha_bull = ha_close > ha_open  # 阳线
+        ha_bear = ha_close < ha_open  # 阴线
+        
+        signals = pd.Series(0, index=data.index)
+        
+        # 连续3根阳线买入
+        buy_signal = (ha_bull & ha_bull.shift(1) & ha_bull.shift(2) & 
+                      (~(ha_bull.shift(1) & ha_bull.shift(2) & ha_bull.shift(3)).fillna(False)))
+        
+        # 连续3根阴线卖出
+        sell_signal = (ha_bear & ha_bear.shift(1) & ha_bear.shift(2) & 
+                       (~(ha_bear.shift(1) & ha_bear.shift(2) & ha_bear.shift(3)).fillna(False)))
+        
+        signals[buy_signal] = 1
+        signals[sell_signal] = -1
+        
+        return signals
+    
     @staticmethod
     def combined_strategy(data: pd.DataFrame, 
                          strategies: List[Tuple[str, Dict]],
@@ -481,6 +937,14 @@ class StrategyGenerator:
             'kdj': StrategyGenerator.kdj,
             'cci': StrategyGenerator.cci,
             'williams_r': StrategyGenerator.williams_r,
+            'ichimoku': StrategyGenerator.ichimoku,
+            'parabolic_sar': StrategyGenerator.parabolic_sar,
+            'obv': StrategyGenerator.obv,
+            'adx': StrategyGenerator.adx,
+            'mfi': StrategyGenerator.mfi,
+            'vwap': StrategyGenerator.vwap,
+            'stochastic': StrategyGenerator.stochastic,
+            'heikin_ashi': StrategyGenerator.heikin_ashi,
         }
         
         combined_signal = pd.Series(0.0, index=data.index)
@@ -595,7 +1059,9 @@ def get_strategy_names() -> List[str]:
     return [
         'dual_ma', 'macd', 'rsi', 'bollinger',
         'momentum', 'atr_breakout', 'donchian', 'volume_price',
-        'supertrend'  # Jarvis版本新增
+        'supertrend', 'kdj', 'cci', 'williams_r',
+        'ichimoku', 'parabolic_sar', 'obv', 'adx',
+        'mfi', 'vwap', 'stochastic', 'heikin_ashi',
     ]
 
 
@@ -623,9 +1089,17 @@ def generate_strategy(data: pd.DataFrame, strategy_name: str, **params) -> pd.Se
         'donchian': generator.donchian_channel,
         'volume_price': generator.volume_price_trend,
         'supertrend': generator.supertrend,
-        'kdj': generator.kdj,              # 新增
-        'cci': generator.cci,              # 新增
-        'williams_r': generator.williams_r, # 新增
+        'kdj': generator.kdj,
+        'cci': generator.cci,
+        'williams_r': generator.williams_r,
+        'ichimoku': generator.ichimoku,
+        'parabolic_sar': generator.parabolic_sar,
+        'obv': generator.obv,
+        'adx': generator.adx,
+        'mfi': generator.mfi,
+        'vwap': generator.vwap,
+        'stochastic': generator.stochastic,
+        'heikin_ashi': generator.heikin_ashi,
     }
     
     if strategy_name not in strategy_map:
