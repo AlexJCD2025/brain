@@ -906,6 +906,462 @@ class StrategyGenerator:
         
         return signals
     
+    # ============================================================
+    # 第三波新增策略 - 高级技术指标
+    # ============================================================
+    
+    @staticmethod
+    def trix(data: pd.DataFrame, period: int = 15, signal_period: int = 9) -> pd.Series:
+        """
+        TRIX (Triple Exponential Moving Average) 三重指数平滑
+        
+        Jack Hutson开发的趋势指标，过滤价格噪音
+        
+        Args:
+            data: OHLCV DataFrame
+            period: TRIX周期 (默认15)
+            signal_period: 信号线周期 (默认9)
+            
+        Returns:
+            信号序列
+            
+        逻辑:
+            TRIX上穿信号线买入，下穿卖出
+        """
+        close = data['close']
+        
+        # 三重EMA
+        ema1 = close.ewm(span=period, adjust=False).mean()
+        ema2 = ema1.ewm(span=period, adjust=False).mean()
+        ema3 = ema2.ewm(span=period, adjust=False).mean()
+        
+        # TRIX = 三重EMA的变化率(%)
+        trix = (ema3 - ema3.shift(1)) / ema3.shift(1) * 100
+        
+        # 信号线
+        signal_line = trix.ewm(span=signal_period, adjust=False).mean()
+        
+        signals = pd.Series(0, index=data.index)
+        
+        # TRIX上穿信号线买入，下穿卖出
+        buy_signal = (trix > signal_line) & (trix.shift(1) <= signal_line.shift(1))
+        sell_signal = (trix < signal_line) & (trix.shift(1) >= signal_line.shift(1))
+        
+        signals[buy_signal] = 1
+        signals[sell_signal] = -1
+        
+        return signals
+    
+    @staticmethod
+    def aroon(data: pd.DataFrame, period: int = 14) -> pd.Series:
+        """
+        Aroon (阿隆指标) 趋势强度指标
+        
+        Tushar Chande开发，判断趋势强度和方向
+        
+        Args:
+            data: OHLCV DataFrame
+            period: Aroon周期 (默认14)
+            
+        Returns:
+            信号序列
+            
+        逻辑:
+            Aroon上穿上穿70且Aroon下穿30买入
+        """
+        high = data['high']
+        low = data['low']
+        
+        # 计算Aroon Up和Aroon Down
+        # Aroon Up = ((period - 距离最高点的天数) / period) * 100
+        # Aroon Down = ((period - 距离最低点的天数) / period) * 100
+        
+        def get_days_since_high(x):
+            return period - np.argmax(x) if len(x) > 0 else period
+        
+        def get_days_since_low(x):
+            return period - np.argmin(x) if len(x) > 0 else period
+        
+        aroon_up = high.rolling(window=period).apply(
+            lambda x: ((period - get_days_since_high(x)) / period) * 100
+        )
+        aroon_down = low.rolling(window=period).apply(
+            lambda x: ((period - get_days_since_low(x)) / period) * 100
+        )
+        
+        signals = pd.Series(0, index=data.index)
+        
+        # Aroon Up > 70 且 Aroon Down < 30 为强上升趋势
+        buy_signal = (aroon_up > 70) & (aroon_down < 30) & \
+                     (~((aroon_up.shift(1) > 70) & (aroon_down.shift(1) < 30)))
+        
+        # Aroon Up < 30 且 Aroon Down > 70 为强下降趋势
+        sell_signal = (aroon_up < 30) & (aroon_down > 70) & \
+                      (~((aroon_up.shift(1) < 30) & (aroon_down.shift(1) > 70)))
+        
+        signals[buy_signal] = 1
+        signals[sell_signal] = -1
+        
+        return signals
+    
+    @staticmethod
+    def ultimate_oscillator(data: pd.DataFrame, 
+                           short_period: int = 7,
+                           medium_period: int = 14,
+                           long_period: int = 28) -> pd.Series:
+        """
+        Ultimate Oscillator (终极震荡指标)
+        
+        Larry Williams开发，结合三个周期的动量
+        
+        Args:
+            data: OHLCV DataFrame
+            short_period: 短周期 (默认7)
+            medium_period: 中周期 (默认14)
+            long_period: 长周期 (默认28)
+            
+        Returns:
+            信号序列
+            
+        逻辑:
+            UO < 30 超卖买入，UO > 70 超买卖出
+        """
+        high = data['high']
+        low = data['low']
+        close = data['close']
+        
+        # 真实最低价
+        true_low = pd.concat([low, close.shift(1)], axis=1).min(axis=1)
+        # 真实最高价
+        true_high = pd.concat([high, close.shift(1)], axis=1).max(axis=1)
+        
+        # 买入压力
+        buying_pressure = close - true_low
+        # 真实区间
+        true_range = true_high - true_low
+        
+        # 计算三个周期的平均值
+        avg_short = buying_pressure.rolling(short_period).sum() / true_range.rolling(short_period).sum()
+        avg_medium = buying_pressure.rolling(medium_period).sum() / true_range.rolling(medium_period).sum()
+        avg_long = buying_pressure.rolling(long_period).sum() / true_range.rolling(long_period).sum()
+        
+        # Ultimate Oscillator
+        uo = 100 * ((4 * avg_short) + (2 * avg_medium) + avg_long) / 7
+        
+        signals = pd.Series(0, index=data.index)
+        
+        # UO < 30 买入，UO > 70 卖出
+        buy_signal = (uo < 30) & (uo.shift(1) >= 30)
+        sell_signal = (uo > 70) & (uo.shift(1) <= 70)
+        
+        signals[buy_signal] = 1
+        signals[sell_signal] = -1
+        
+        return signals
+    
+    @staticmethod
+    def chaikin_money_flow(data: pd.DataFrame, period: int = 20) -> pd.Series:
+        """
+        Chaikin Money Flow (CMF) 蔡金资金流量
+        
+        Marc Chaikin开发，衡量资金流向
+        
+        Args:
+            data: OHLCV DataFrame
+            period: CMF周期 (默认20)
+            
+        Returns:
+            信号序列
+            
+        逻辑:
+            CMF > 0 资金流入买入，CMF < 0 资金流出卖出
+        """
+        high = data['high']
+        low = data['low']
+        close = data['close']
+        volume = data['volume']
+        
+        # 资金流量乘数
+        money_flow_multiplier = ((close - low) - (high - close)) / (high - low)
+        money_flow_multiplier = money_flow_multiplier.replace([np.inf, -np.inf], 0).fillna(0)
+        
+        # 资金流量体积
+        money_flow_volume = money_flow_multiplier * volume
+        
+        # CMF
+        cmf = money_flow_volume.rolling(window=period).sum() / volume.rolling(window=period).sum()
+        
+        signals = pd.Series(0, index=data.index)
+        
+        # CMF上穿0买入，下穿0卖出
+        buy_signal = (cmf > 0) & (cmf.shift(1) <= 0)
+        sell_signal = (cmf < 0) & (cmf.shift(1) >= 0)
+        
+        signals[buy_signal] = 1
+        signals[sell_signal] = -1
+        
+        return signals
+    
+    @staticmethod
+    def keltner_channel(data: pd.DataFrame, 
+                       period: int = 20,
+                       atr_multiplier: float = 2.0) -> pd.Series:
+        """
+        Keltner Channel (肯特纳通道)
+        
+        Chester Keltner开发，类似布林带但用ATR
+        
+        Args:
+            data: OHLCV DataFrame
+            period: EMA周期 (默认20)
+            atr_multiplier: ATR倍数 (默认2.0)
+            
+        Returns:
+            信号序列
+            
+        逻辑:
+            价格上穿上轨买入，下穿下轨卖出
+        """
+        high = data['high']
+        low = data['low']
+        close = data['close']
+        
+        # 中轨 = EMA
+        middle_line = close.ewm(span=period, adjust=False).mean()
+        
+        # ATR
+        tr1 = high - low
+        tr2 = abs(high - close.shift(1))
+        tr3 = abs(low - close.shift(1))
+        tr = pd.concat([tr1, tr2, tr3], axis=1).max(axis=1)
+        atr = tr.rolling(window=period).mean()
+        
+        # 上轨和下轨
+        upper_band = middle_line + (atr_multiplier * atr)
+        lower_band = middle_line - (atr_multiplier * atr)
+        
+        signals = pd.Series(0, index=data.index)
+        
+        # 突破上轨买入，跌破下轨卖出
+        buy_signal = (close > upper_band) & (close.shift(1) <= upper_band.shift(1))
+        sell_signal = (close < lower_band) & (close.shift(1) >= lower_band.shift(1))
+        
+        signals[buy_signal] = 1
+        signals[sell_signal] = -1
+        
+        return signals
+    
+    @staticmethod
+    def rate_of_change(data: pd.DataFrame, period: int = 12) -> pd.Series:
+        """
+        ROC (Rate of Change) 变化率指标
+        
+        简单的动量指标
+        
+        Args:
+            data: OHLCV DataFrame
+            period: ROC周期 (默认12)
+            
+        Returns:
+            信号序列
+            
+        逻辑:
+            ROC > 0 买入，ROC < 0 卖出
+        """
+        close = data['close']
+        
+        # ROC = ((今日收盘价 - N日前收盘价) / N日前收盘价) * 100
+        roc = ((close - close.shift(period)) / close.shift(period)) * 100
+        
+        signals = pd.Series(0, index=data.index)
+        
+        # ROC上穿0买入，下穿0卖出
+        buy_signal = (roc > 0) & (roc.shift(1) <= 0)
+        sell_signal = (roc < 0) & (roc.shift(1) >= 0)
+        
+        signals[buy_signal] = 1
+        signals[sell_signal] = -1
+        
+        return signals
+    
+    @staticmethod
+    def tsi(data: pd.DataFrame, 
+           long_period: int = 25,
+           short_period: int = 13) -> pd.Series:
+        """
+        TSI (True Strength Index) 真实强弱指数
+        
+        双重平滑的动量指标
+        
+        Args:
+            data: OHLCV DataFrame
+            long_period: 长期周期 (默认25)
+            short_period: 短期周期 (默认13)
+            
+        Returns:
+            信号序列
+            
+        逻辑:
+            TSI上穿0买入，下穿0卖出
+        """
+        close = data['close']
+        
+        # 价格变化
+        price_change = close.diff()
+        
+        # 双重平滑
+        double_smoothed_pc = price_change.ewm(span=long_period, adjust=False).mean().ewm(span=short_period, adjust=False).mean()
+        double_smoothed_abs_pc = price_change.abs().ewm(span=long_period, adjust=False).mean().ewm(span=short_period, adjust=False).mean()
+        
+        # TSI
+        tsi = (double_smoothed_pc / double_smoothed_abs_pc) * 100
+        
+        signals = pd.Series(0, index=data.index)
+        
+        # TSI上穿0买入，下穿0卖出
+        buy_signal = (tsi > 0) & (tsi.shift(1) <= 0)
+        sell_signal = (tsi < 0) & (tsi.shift(1) >= 0)
+        
+        signals[buy_signal] = 1
+        signals[sell_signal] = -1
+        
+        return signals
+    
+    @staticmethod
+    def vortex_indicator(data: pd.DataFrame, period: int = 14) -> pd.Series:
+        """
+        Vortex Indicator (漩涡指标)
+        
+        Etienne Botes和Douglas Siepman开发，判断趋势方向
+        
+        Args:
+            data: OHLCV DataFrame
+            period: 周期 (默认14)
+            
+        Returns:
+            信号序列
+            
+        逻辑:
+            VI+ > VI- 上升趋势买入，反之卖出
+        """
+        high = data['high']
+        low = data['low']
+        close = data['close']
+        
+        # 真实区间
+        tr1 = high - low
+        tr2 = abs(high - close.shift(1))
+        tr3 = abs(low - close.shift(1))
+        tr = pd.concat([tr1, tr2, tr3], axis=1).max(axis=1)
+        
+        # VM+ 和 VM-
+        vm_plus = abs(high - low.shift(1))
+        vm_minus = abs(low - high.shift(1))
+        
+        # VI+ 和 VI-
+        vi_plus = vm_plus.rolling(window=period).sum() / tr.rolling(window=period).sum()
+        vi_minus = vm_minus.rolling(window=period).sum() / tr.rolling(window=period).sum()
+        
+        signals = pd.Series(0, index=data.index)
+        
+        # VI+上穿VI-买入，下穿卖出
+        buy_signal = (vi_plus > vi_minus) & (vi_plus.shift(1) <= vi_minus.shift(1))
+        sell_signal = (vi_plus < vi_minus) & (vi_plus.shift(1) >= vi_minus.shift(1))
+        
+        signals[buy_signal] = 1
+        signals[sell_signal] = -1
+        
+        return signals
+    
+    @staticmethod
+    def awesome_oscillator(data: pd.DataFrame, 
+                          short_period: int = 5,
+                          long_period: int = 34) -> pd.Series:
+        """
+        Awesome Oscillator (AO) 动量震荡指标
+        
+        Bill Williams开发，基于中间价
+        
+        Args:
+            data: OHLCV DataFrame
+            short_period: 短周期 (默认5)
+            long_period: 长周期 (默认34)
+            
+        Returns:
+            信号序列
+            
+        逻辑:
+            AO上穿0买入，下穿0卖出
+        """
+        high = data['high']
+        low = data['low']
+        
+        # 中间价
+        median_price = (high + low) / 2
+        
+        # 简单移动平均
+        sma_short = median_price.rolling(window=short_period).mean()
+        sma_long = median_price.rolling(window=long_period).mean()
+        
+        # AO
+        ao = sma_short - sma_long
+        
+        signals = pd.Series(0, index=data.index)
+        
+        # AO上穿0买入，下穿0卖出
+        buy_signal = (ao > 0) & (ao.shift(1) <= 0)
+        sell_signal = (ao < 0) & (ao.shift(1) >= 0)
+        
+        signals[buy_signal] = 1
+        signals[sell_signal] = -1
+        
+        return signals
+    
+    @staticmethod
+    def alligator(data: pd.DataFrame,
+                 jaw_period: int = 13,
+                 teeth_period: int = 8,
+                 lips_period: int = 5) -> pd.Series:
+        """
+        Alligator (鳄鱼线)
+        
+        Bill Williams开发，三条平滑移动平均线
+        
+        Args:
+            data: OHLCV DataFrame
+            jaw_period: 颚线周期 (默认13)
+            teeth_period: 齿线周期 (默认8)
+            lips_period: 唇线周期 (默认5)
+            
+        Returns:
+            信号序列
+            
+        逻辑:
+            唇线上穿齿线和颚线买入 (鳄鱼张嘴)
+            唇线下穿齿线和颚线卖出 (鳄鱼闭嘴)
+        """
+        median_price = (data['high'] + data['low']) / 2
+        
+        # 鳄鱼线 (SMMA)
+        jaw = median_price.rolling(window=jaw_period).mean().shift(8)      # 颚线 (蓝)
+        teeth = median_price.rolling(window=teeth_period).mean().shift(5)  # 齿线 (红)
+        lips = median_price.rolling(window=lips_period).mean().shift(3)    # 唇线 (绿)
+        
+        signals = pd.Series(0, index=data.index)
+        
+        # 唇线上穿齿线和颚线 (买入)
+        buy_signal = (lips > teeth) & (lips > jaw) & \
+                     ((lips.shift(1) <= teeth.shift(1)) | (lips.shift(1) <= jaw.shift(1)))
+        
+        # 唇线下穿齿线和颚线 (卖出)
+        sell_signal = (lips < teeth) & (lips < jaw) & \
+                      ((lips.shift(1) >= teeth.shift(1)) | (lips.shift(1) >= jaw.shift(1)))
+        
+        signals[buy_signal] = 1
+        signals[sell_signal] = -1
+        
+        return signals
+    
     @staticmethod
     def combined_strategy(data: pd.DataFrame, 
                          strategies: List[Tuple[str, Dict]],
@@ -945,6 +1401,16 @@ class StrategyGenerator:
             'vwap': StrategyGenerator.vwap,
             'stochastic': StrategyGenerator.stochastic,
             'heikin_ashi': StrategyGenerator.heikin_ashi,
+            'trix': StrategyGenerator.trix,
+            'aroon': StrategyGenerator.aroon,
+            'ultimate_oscillator': StrategyGenerator.ultimate_oscillator,
+            'chaikin_money_flow': StrategyGenerator.chaikin_money_flow,
+            'keltner_channel': StrategyGenerator.keltner_channel,
+            'rate_of_change': StrategyGenerator.rate_of_change,
+            'tsi': StrategyGenerator.tsi,
+            'vortex_indicator': StrategyGenerator.vortex_indicator,
+            'awesome_oscillator': StrategyGenerator.awesome_oscillator,
+            'alligator': StrategyGenerator.alligator,
         }
         
         combined_signal = pd.Series(0.0, index=data.index)
@@ -1062,6 +1528,9 @@ def get_strategy_names() -> List[str]:
         'supertrend', 'kdj', 'cci', 'williams_r',
         'ichimoku', 'parabolic_sar', 'obv', 'adx',
         'mfi', 'vwap', 'stochastic', 'heikin_ashi',
+        'trix', 'aroon', 'ultimate_oscillator', 'chaikin_money_flow',
+        'keltner_channel', 'rate_of_change', 'tsi', 'vortex_indicator',
+        'awesome_oscillator', 'alligator',
     ]
 
 
@@ -1100,6 +1569,16 @@ def generate_strategy(data: pd.DataFrame, strategy_name: str, **params) -> pd.Se
         'vwap': generator.vwap,
         'stochastic': generator.stochastic,
         'heikin_ashi': generator.heikin_ashi,
+        'trix': generator.trix,
+        'aroon': generator.aroon,
+        'ultimate_oscillator': generator.ultimate_oscillator,
+        'chaikin_money_flow': generator.chaikin_money_flow,
+        'keltner_channel': generator.keltner_channel,
+        'rate_of_change': generator.rate_of_change,
+        'tsi': generator.tsi,
+        'vortex_indicator': generator.vortex_indicator,
+        'awesome_oscillator': generator.awesome_oscillator,
+        'alligator': generator.alligator,
     }
     
     if strategy_name not in strategy_map:
