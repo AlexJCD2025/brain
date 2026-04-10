@@ -1,0 +1,60 @@
+[tool.poetry]
+name = "brain"
+version = "0.1.0"
+description = "量化交易框架 - 智能量化交易系统"
+authors = ["Your Name <your.email@example.com>"]
+readme = "README.md"
+license = "MIT"
+repository = "https://github.com/yourusername/brain"
+homepage = "https://github.com/yourusername/brain"
+keywords = ["quantitative", "trading", "backtest", "strategy", "finance"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Financial and Insurance Industry",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Office/Business :: Financial :: Investment",
+]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+backtrader = ">=1.9.78"
+akshare = ">=1.14.0"
+polars = ">=0.20.0"
+plotly = ">=5.18.0"
+python-telegram-bot = ">=20.7"
+pydantic = ">=2.5.0"
+pyyaml = ">=6.0.1"
+
+[tool.poetry.group.dev.dependencies]
+pytest = ">=7.4.0"
+pytest-cov = "^4.1.0"
+black = "^23.12.0"
+flake8 = "^7.0.0"
+mypy = "^1.7.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.scripts]
+brain = "brain.cli:main"
+
+[tool.black]
+line-length = 88
+target-version = ['py311']
+
+[tool.mypy]
+python_version = "3.11"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_functions = ["test_*"]
+addopts = "-v --tb=short"
