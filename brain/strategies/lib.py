@@ -16,21 +16,29 @@ class StrategyGenerator:
     """策略生成器 - 生成信号序列"""
     
     @staticmethod
-    def dual_ma(data: pd.DataFrame, fast: int = 10, slow: int = 30) -> pd.Series:
+    def dual_ma(data: pd.DataFrame, fast: int = 10, slow: int = 30,
+                ma_type: str = "sma") -> pd.Series:
         """
-        双均线策略
+        双均线策略 (支持SMA和EMA)
         
         Args:
             data: OHLCV DataFrame
             fast: 短期均线周期
             slow: 长期均线周期
+            ma_type: 均线类型 ("sma" 或 "ema")
             
         Returns:
             信号序列 (1=买入, -1=卖出, 0=持有)
         """
         close = data['close']
-        ma_fast = close.rolling(fast).mean()
-        ma_slow = close.rolling(slow).mean()
+        
+        # 支持 SMA 和 EMA 切换
+        if ma_type == "ema":
+            ma_fast = close.ewm(span=fast, adjust=False).mean()
+            ma_slow = close.ewm(span=slow, adjust=False).mean()
+        else:  # sma
+            ma_fast = close.rolling(fast).mean()
+            ma_slow = close.rolling(slow).mean()
         
         signals = pd.Series(0, index=data.index)
         
@@ -40,6 +48,57 @@ class StrategyGenerator:
         
         signals[golden_cross] = 1
         signals[death_cross] = -1
+        
+        return signals
+    
+    @staticmethod
+    def supertrend(data: pd.DataFrame, period: int = 10, multiplier: float = 3.0) -> pd.Series:
+        """
+        超级趋势策略 Supertrend (Jarvis版本优化)
+        
+        优化点:
+        - 修复 Jarvis 版本的 close.class() Bug
+        - 方向改变时才产生信号
+        
+        Args:
+            data: OHLCV DataFrame
+            period: ATR周期 (默认10)
+            multiplier: ATR倍数 (默认3.0)
+            
+        Returns:
+            信号序列
+        """
+        high = data['high']
+        low = data['low']
+        close = data['close']
+        
+        # 计算ATR
+        tr1 = high - low
+        tr2 = abs(high - close.shift(1))
+        tr3 = abs(low - close.shift(1))
+        tr = pd.concat([tr1, tr2, tr3], axis=1).max(axis=1)
+        atr = tr.rolling(period).mean()
+        
+        # 计算上下轨
+        hl2 = (high + low) / 2
+        upper_band = hl2 + multiplier * atr
+        lower_band = hl2 - multiplier * atr
+        
+        # 计算方向 (1=多头, -1=空头)
+        direction = pd.Series(1, index=data.index)
+        
+        for i in range(1, len(close)):
+            if close.iloc[i] > upper_band.iloc[i]:
+                direction.iloc[i] = 1
+            elif close.iloc[i] < lower_band.iloc[i]:
+                direction.iloc[i] = -1
+            else:
+                direction.iloc[i] = direction.iloc[i-1]
+        
+        # 生成信号 (方向改变时)
+        signals = pd.Series(0, index=data.index)
+        signals[(direction == 1) & (direction.shift(1) == -1)] = 1   # 转多
+        signals[(direction == -1) & (direction.shift(1) == 1)] = -1  # 转空
         
         return signals
     
@@ -382,6 +441,11 @@ class StrategyOptimizer:
                 {'period': 20},
                 {'period': 30},
             ],
+            'supertrend': [
+                {'period': 10, 'multiplier': 3.0},
+                {'period': 14, 'multiplier': 2.0},
+                {'period': 20, 'multiplier': 1.5},
+            ],
         }
         
         return param_grids.get(strategy_name, [{}])
@@ -398,7 +462,8 @@ class StrategyOptimizer:
         
         strategy_names = [
             'dual_ma', 'macd', 'rsi', 'bollinger', 
-            'momentum', 'atr_breakout', 'donchian', 'volume_price'
+            'momentum', 'atr_breakout', 'donchian', 'volume_price',
+            'supertrend'  # Jarvis新增
         ]
         
         for name in strategy_names:
@@ -415,7 +480,8 @@ def get_strategy_names() -> List[str]:
     """获取所有策略名称"""
     return [
         'dual_ma', 'macd', 'rsi', 'bollinger',
-        'momentum', 'atr_breakout', 'donchian', 'volume_price'
+        'momentum', 'atr_breakout', 'donchian', 'volume_price',
+        'supertrend'  # Jarvis版本新增
     ]
 
 
@@ -442,6 +508,7 @@ def generate_strategy(data: pd.DataFrame, strategy_name: str, **params) -> pd.Se
         'atr_breakout': generator.atr_breakout,
         'donchian': generator.donchian_channel,
         'volume_price': generator.volume_price_trend,
+        'supertrend': generator.supertrend,  # Jarvis版本新增
     }
     
     if strategy_name not in strategy_map:
