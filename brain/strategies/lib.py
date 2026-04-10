@@ -339,6 +339,117 @@ class StrategyGenerator:
         
         return signals
     
+    # ============================================================
+    # D. 新增策略 - KDJ, CCI, Williams %R
+    # ============================================================
+    
+    @staticmethod
+    def kdj(data: pd.DataFrame, n: int = 9, m1: int = 3, m2: int = 3) -> pd.Series:
+        """
+        KDJ随机指标策略
+        
+        Args:
+            data: OHLCV DataFrame
+            n: RSV周期 (默认9)
+            m1: K平滑因子 (默认3)
+            m2: D平滑因子 (默认3)
+            
+        Returns:
+            信号序列
+            
+        逻辑:
+            K上穿D买入 (金叉)
+            K下穿D卖出 (死叉)
+        """
+        low_list = data['low'].rolling(window=n, min_periods=n).min()
+        high_list = data['high'].rolling(window=n, min_periods=n).max()
+        rsv = (data['close'] - low_list) / (high_list - low_list) * 100
+        
+        # 计算K, D, J值
+        k = rsv.ewm(alpha=1/m1, adjust=False).mean()
+        d = k.ewm(alpha=1/m2, adjust=False).mean()
+        j = 3 * k - 2 * d
+        
+        signals = pd.Series(0, index=data.index)
+        
+        # K上穿D买入，下穿卖出
+        golden_cross = (k > d) & (k.shift(1) <= d.shift(1))
+        death_cross = (k < d) & (k.shift(1) >= d.shift(1))
+        
+        signals[golden_cross] = 1
+        signals[death_cross] = -1
+        
+        return signals
+    
+    @staticmethod
+    def cci(data: pd.DataFrame, period: int = 20, upper: float = 100, lower: float = -100) -> pd.Series:
+        """
+        CCI商品通道指数策略
+        
+        Args:
+            data: OHLCV DataFrame
+            period: CCI周期 (默认20)
+            upper: 超买阈值 (默认+100)
+            lower: 超卖阈值 (默认-100)
+            
+        Returns:
+            信号序列
+            
+        逻辑:
+            CCI < lower 超卖买入
+            CCI > upper 超买卖出
+        """
+        tp = (data['high'] + data['low'] + data['close']) / 3
+        ma_tp = tp.rolling(window=period).mean()
+        md = tp.rolling(window=period).apply(lambda x: np.abs(x - x.mean()).mean())
+        
+        cci = (tp - ma_tp) / (0.015 * md)
+        
+        signals = pd.Series(0, index=data.index)
+        
+        # CCI低于下界买入，高于上界卖出
+        buy_signal = (cci < lower) & (cci.shift(1) >= lower)
+        sell_signal = (cci > upper) & (cci.shift(1) <= upper)
+        
+        signals[buy_signal] = 1
+        signals[sell_signal] = -1
+        
+        return signals
+    
+    @staticmethod
+    def williams_r(data: pd.DataFrame, period: int = 14, upper: float = -20, lower: float = -80) -> pd.Series:
+        """
+        Williams %R 威廉指标策略
+        
+        Args:
+            data: OHLCV DataFrame
+            period: 周期 (默认14)
+            upper: 超买阈值 (默认-20)
+            lower: 超卖阈值 (默认-80)
+            
+        Returns:
+            信号序列
+            
+        逻辑:
+            %R < lower (-80) 超卖买入
+            %R > upper (-20) 超买卖出
+        """
+        highest_high = data['high'].rolling(window=period).max()
+        lowest_low = data['low'].rolling(window=period).min()
+        
+        williams_r = (highest_high - data['close']) / (highest_high - lowest_low) * -100
+        
+        signals = pd.Series(0, index=data.index)
+        
+        # %R低于下界买入，高于上界卖出
+        buy_signal = (williams_r < lower) & (williams_r.shift(1) >= lower)
+        sell_signal = (williams_r > upper) & (williams_r.shift(1) <= upper)
+        
+        signals[buy_signal] = 1
+        signals[sell_signal] = -1
+        
+        return signals
+    
     @staticmethod
     def combined_strategy(data: pd.DataFrame, 
                          strategies: List[Tuple[str, Dict]],
@@ -367,6 +478,9 @@ class StrategyGenerator:
             'atr_breakout': StrategyGenerator.atr_breakout,
             'donchian': StrategyGenerator.donchian_channel,
             'volume_price': StrategyGenerator.volume_price_trend,
+            'kdj': StrategyGenerator.kdj,
+            'cci': StrategyGenerator.cci,
+            'williams_r': StrategyGenerator.williams_r,
         }
         
         combined_signal = pd.Series(0.0, index=data.index)
@@ -508,7 +622,10 @@ def generate_strategy(data: pd.DataFrame, strategy_name: str, **params) -> pd.Se
         'atr_breakout': generator.atr_breakout,
         'donchian': generator.donchian_channel,
         'volume_price': generator.volume_price_trend,
-        'supertrend': generator.supertrend,  # Jarvis版本新增
+        'supertrend': generator.supertrend,
+        'kdj': generator.kdj,              # 新增
+        'cci': generator.cci,              # 新增
+        'williams_r': generator.williams_r, # 新增
     }
     
     if strategy_name not in strategy_map:
