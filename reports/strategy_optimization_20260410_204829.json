@@ -1,0 +1,119 @@
+{
+  "timestamp": "20260410_204829",
+  "strategies": [
+    {
+      "strategy_name": "dual_ma",
+      "best_params": {
+        "fast": 5,
+        "slow": 20,
+        "ma_type": "sma"
+      },
+      "return_pct": 2.8525,
+      "max_drawdown": -4.3457,
+      "win_rate": 56.25,
+      "total_trades": 16,
+      "profit_loss_ratio": 1.0558,
+      "score": 22.42791879328992
+    },
+    {
+      "strategy_name": "macd",
+      "best_params": {
+        "fast": 8,
+        "slow": 21,
+        "signal": 5
+      },
+      "return_pct": -5.4061,
+      "max_drawdown": -7.8833,
+      "win_rate": 55.88,
+      "total_trades": 34,
+      "profit_loss_ratio": 0.7307,
+      "score": 18.467830166047214
+    },
+    {
+      "strategy_name": "rsi",
+      "best_params": {
+        "period": 14,
+        "overbought": 80,
+        "oversold": 20
+      },
+      "return_pct": -2.5732,
+      "max_drawdown": -3.5594,
+      "win_rate": 60.0,
+      "total_trades": 5,
+      "profit_loss_ratio": 0.2572,
+      "score": 20.70384075068832
+    },
+    {
+      "strategy_name": "bollinger",
+      "best_params": {
+        "period": 15,
+        "std_dev": 2.5
+      },
+      "return_pct": 2.5932,
+      "max_drawdown": -0.3777,
+      "win_rate": 100.0,
+      "total_trades": 2,
+      "profit_loss_ratio": 0.0,
+      "score": 33.07700994440032
+    },
+    {
+      "strategy_name": "momentum",
+      "best_params": {
+        "period": 30
+      },
+      "return_pct": 1.0037,
+      "max_drawdown": -5.4823,
+      "win_rate": 59.09,
+      "total_trades": 22,
+      "profit_loss_ratio": 0.8166,
+      "score": 22.054404028236327
+    },
+    {
+      "strategy_name": "atr_breakout",
+      "best_params": {
+        "period": 14,
+        "multiplier": 2.0
+      },
+      "return_pct": 17.9353,
+      "max_drawdown": -2.7373,
+      "win_rate": 57.69,
+      "total_trades": 26,
+      "profit_loss_ratio": 2.0237,
+      "score": 30.4177759383334
+    },
+    {
+      "strategy_name": "donchian",
+      "best_params": {
+        "period": 20
+      },
+      "return_pct": 15.9345,
+      "max_drawdown": -3.88,
+      "win_rate": 57.14,
+      "total_trades": 28,
+      "profit_loss_ratio": 1.5805,
+      "score": 28.753848969072166
+    },
+    {
+      "strategy_name": "volume_price",
+      "best_params": {
+        "period": 10
+      },
+      "return_pct": 4.8958,
+      "max_drawdown": -20.9836,
+      "win_rate": 50.7,
+      "total_trades": 71,
+      "profit_loss_ratio": 1.1515,
+      "score": 21.668314662498332
+    },
+    {
+      "strategy_name": "supertrend",
+      "best_params": {},
+      "return_pct": 0,
+      "max_drawdown": 0,
+      "win_rate": 0,
+      "total_trades": 0,
+      "profit_loss_ratio": 0,
+      "score": 0
+    }
+  ]
+}
