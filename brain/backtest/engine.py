@@ -166,7 +166,7 @@ class BacktestEngine:
         Returns:
             dict: 回测结果字典
         """
-        if not self.strategy:
+        if self.strategy is None:
             raise RuntimeError("请先运行回测")
 
         # 获取分析器结果

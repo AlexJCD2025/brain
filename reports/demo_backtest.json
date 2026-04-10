@@ -1,0 +1,248 @@
+{
+  "initial_value": 100000,
+  "final_value": 99993.90607,
+  "return_pct": -0.0061,
+  "sharpe_ratio": 0,
+  "max_drawdown": 0.0134,
+  "total_trades": 5,
+  "drawdown_analysis": {
+    "len": 177,
+    "drawdown": 0.009217292084052631,
+    "moneydown": 9.217579999996815,
+    "max": {
+      "len": 177,
+      "drawdown": 0.013445760001502166,
+      "moneydown": 13.446179999984452
+    }
+  },
+  "returns_analysis": {
+    "rtot": -6.094115687464281e-05,
+    "ravg": -2.4182998759778894e-07,
+    "rnorm": -6.0939300000062424e-05,
+    "rnorm100": -0.006093930000006242
+  },
+  "trades_analysis": {
+    "total": {
+      "total": 5,
+      "open": 0,
+      "closed": 5
+    },
+    "streak": {
+      "won": {
+        "current": 0,
+        "longest": 1
+      },
+      "lost": {
+        "current": 1,
+        "longest": 3
+      }
+    },
+    "pnl": {
+      "gross": {
+        "total": -5.2099999999999795,
+        "average": -1.0419999999999958
+      },
+      "net": {
+        "total": -6.093929999999979,
+        "average": -1.2187859999999957
+      }
+    },
+    "won": {
+      "total": 1,
+      "pnl": {
+        "total": 2.4376299999999995,
+        "average": 2.4376299999999995,
+        "max": 2.4376299999999995
+      }
+    },
+    "lost": {
+      "total": 4,
+      "pnl": {
+        "total": -8.53155999999998,
+        "average": -2.132889999999995,
+        "max": -3.7990699999999955
+      }
+    },
+    "long": {
+      "total": 5,
+      "pnl": {
+        "total": -6.093929999999979,
+        "average": -1.2187859999999957,
+        "won": {
+          "total": 2.4376299999999995,
+          "average": 2.4376299999999995,
+          "max": 2.4376299999999995
+        },
+        "lost": {
+          "total": -8.53155999999998,
+          "average": -2.132889999999995,
+          "max": -3.7990699999999955
+        }
+      },
+      "won": 1,
+      "lost": 4
+    },
+    "short": {
+      "total": 0,
+      "pnl": {
+        "total": 0.0,
+        "average": 0.0,
+        "won": {
+          "total": 0.0,
+          "average": 0.0,
+          "max": 0.0
+        },
+        "lost": {
+          "total": 0.0,
+          "average": 0.0,
+          "max": 0.0
+        }
+      },
+      "won": 0,
+      "lost": 0
+    },
+    "len": {
+      "total": 99,
+      "average": 19.8,
+      "max": 37,
+      "min": 2,
+      "won": {
+        "total": 37,
+        "average": 37.0,
+        "max": 37,
+        "min": 37
+      },
+      "lost": {
+        "total": 62,
+        "average": 15.5,
+        "max": 26,
+        "min": 2
+      },
+      "long": {
+        "total": 99,
+        "average": 19.8,
+        "max": 37,
+        "min": 2,
+        "won": {
+          "total": 37,
+          "average": 37.0,
+          "max": 37,
+          "min": 37
+        },
+        "lost": {
+          "total": 62,
+          "average": 15.5,
+          "max": 26,
+          "min": 2
+        }
+      },
+      "short": {
+        "total": 0,
+        "average": 0.0,
+        "max": 0,
+        "min": 9223372036854775807,
+        "won": {
+          "total": 0,
+          "average": 0.0,
+          "max": 0,
+          "min": 9223372036854775807
+        },
+        "lost": {
+          "total": 0,
+          "average": 0.0,
+          "max": 0,
+          "min": 9223372036854775807
+        }
+      }
+    }
+  },
+  "strategy_trades": {
+    "total_trades": 10,
+    "buy_count": 5,
+    "sell_count": 5,
+    "total_commission": 0.88393,
+    "total_value": 889.14,
+    "trades": [
+      {
+        "datetime": "2023-04-12T00:00:00",
+        "type": "buy",
+        "price": 86.35,
+        "size": 1,
+        "value": 86.35,
+        "commission": 0.08635
+      },
+      {
+        "datetime": "2023-05-05T00:00:00",
+        "type": "sell",
+        "price": 82.72,
+        "size": -1,
+        "value": 86.35,
+        "commission": 0.08272
+      },
+      {
+        "datetime": "2023-05-11T00:00:00",
+        "type": "buy",
+        "price": 86.47,
+        "size": 1,
+        "value": 86.47,
+        "commission": 0.08647
+      },
+      {
+        "datetime": "2023-05-15T00:00:00",
+        "type": "sell",
+        "price": 85.44,
+        "size": -1,
+        "value": 86.47,
+        "commission": 0.08544
+      },
+      {
+        "datetime": "2023-06-21T00:00:00",
+        "type": "buy",
+        "price": 84.66,
+        "size": 1,
+        "value": 84.66,
+        "commission": 0.08466
+      },
+      {
+        "datetime": "2023-07-14T00:00:00",
+        "type": "sell",
+        "price": 82.01,
+        "size": -1,
+        "value": 84.66,
+        "commission": 0.08201000000000001
+      },
+      {
+        "datetime": "2023-08-17T00:00:00",
+        "type": "buy",
+        "price": 84.88,
+        "size": 1,
+        "value": 84.88,
+        "commission": 0.08488
+      },
+      {
+        "datetime": "2023-10-09T00:00:00",
+        "type": "sell",
+        "price": 87.49,
+        "size": -1,
+        "value": 84.88,
+        "commission": 0.08749
+      },
+      {
+        "datetime": "2023-10-25T00:00:00",
+        "type": "buy",
+        "price": 102.21,
+        "size": 1,
+        "value": 102.21,
+        "commission": 0.10221
+      },
+      {
+        "datetime": "2023-11-30T00:00:00",
+        "type": "sell",
+        "price": 101.7,
+        "size": -1,
+        "value": 102.21,
+        "commission": 0.1017
+      }
+    ]
+  }
+}
