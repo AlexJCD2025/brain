@@ -1,0 +1,363 @@
+[
+  {
+    "strategy_id": "dual_ma_1",
+    "strategy_name": "dual_ma",
+    "params": {
+      "fast": 5,
+      "slow": 20
+    },
+    "return_pct": 2.8525,
+    "max_drawdown": -4.3457,
+    "total_trades": 16,
+    "win_rate": 56.25,
+    "profit_loss_ratio": 1.0558,
+    "score": 12.693498793289919
+  },
+  {
+    "strategy_id": "dual_ma_2",
+    "strategy_name": "dual_ma",
+    "params": {
+      "fast": 10,
+      "slow": 30
+    },
+    "return_pct": -2.1943,
+    "max_drawdown": -2.745,
+    "total_trades": 11,
+    "win_rate": 36.36,
+    "profit_loss_ratio": 1.5155,
+    "score": 6.3060157923497275
+  },
+  {
+    "strategy_id": "dual_ma_3",
+    "strategy_name": "dual_ma",
+    "params": {
+      "fast": 20,
+      "slow": 60
+    },
+    "return_pct": -1.102,
+    "max_drawdown": -1.8806,
+    "total_trades": 5,
+    "win_rate": 60.0,
+    "profit_loss_ratio": 0.5187,
+    "score": 11.43527504094438
+  },
+  {
+    "strategy_id": "dual_ma_4",
+    "strategy_name": "dual_ma",
+    "params": {
+      "fast": 5,
+      "slow": 60
+    },
+    "return_pct": 6.208,
+    "max_drawdown": -2.1258,
+    "total_trades": 9,
+    "win_rate": 55.56,
+    "profit_loss_ratio": 2.2389,
+    "score": 14.695183705898959
+  },
+  {
+    "strategy_id": "dual_ma_5",
+    "strategy_name": "dual_ma",
+    "params": {
+      "fast": 10,
+      "slow": 50
+    },
+    "return_pct": 2.7436,
+    "max_drawdown": -2.9718,
+    "total_trades": 8,
+    "win_rate": 50.0,
+    "profit_loss_ratio": 1.714,
+    "score": 11.545803456491015
+  },
+  {
+    "strategy_id": "macd_1",
+    "strategy_name": "macd",
+    "params": {
+      "fast": 8,
+      "slow": 21,
+      "signal": 5
+    },
+    "return_pct": -5.4061,
+    "max_drawdown": -7.8833,
+    "total_trades": 34,
+    "win_rate": 55.88,
+    "profit_loss_ratio": 0.7307,
+    "score": 8.880900166047216
+  },
+  {
+    "strategy_id": "macd_2",
+    "strategy_name": "macd",
+    "params": {
+      "fast": 12,
+      "slow": 26,
+      "signal": 9
+    },
+    "return_pct": -5.0141,
+    "max_drawdown": -6.278,
+    "total_trades": 19,
+    "win_rate": 47.37,
+    "profit_loss_ratio": 0.8785,
+    "score": 7.3166066231283855
+  },
+  {
+    "strategy_id": "macd_3",
+    "strategy_name": "macd",
+    "params": {
+      "fast": 5,
+      "slow": 35,
+      "signal": 5
+    },
+    "return_pct": -13.5576,
+    "max_drawdown": -13.9788,
+    "total_trades": 40,
+    "win_rate": 52.5,
+    "profit_loss_ratio": 0.632,
+    "score": 4.849199402523822
+  },
+  {
+    "strategy_id": "rsi_1",
+    "strategy_name": "rsi",
+    "params": {
+      "period": 7,
+      "overbought": 75,
+      "oversold": 25
+    },
+    "return_pct": 0.0467,
+    "max_drawdown": -10.7841,
+    "total_trades": 27,
+    "win_rate": 44.44,
+    "profit_loss_ratio": 1.4068,
+    "score": 9.048659134837399
+  },
+  {
+    "strategy_id": "rsi_2",
+    "strategy_name": "rsi",
+    "params": {
+      "period": 14,
+      "overbought": 70,
+      "oversold": 30
+    },
+    "return_pct": -3.1709,
+    "max_drawdown": -7.3871,
+    "total_trades": 14,
+    "win_rate": 50.0,
+    "profit_loss_ratio": 0.8217,
+    "score": 8.685035514748684
+  },
+  {
+    "strategy_id": "rsi_3",
+    "strategy_name": "rsi",
+    "params": {
+      "period": 21,
+      "overbought": 75,
+      "oversold": 25
+    },
+    "return_pct": -4.6226,
+    "max_drawdown": -4.6226,
+    "total_trades": 4,
+    "win_rate": 25.0,
+    "profit_loss_ratio": 0.5908,
+    "score": 2.9100399999999995
+  },
+  {
+    "strategy_id": "bollinger_1",
+    "strategy_name": "bollinger",
+    "params": {
+      "period": 20,
+      "std_dev": 1.5
+    },
+    "return_pct": -12.7997,
+    "max_drawdown": -14.7643,
+    "total_trades": 22,
+    "win_rate": 45.45,
+    "profit_loss_ratio": 0.5358,
+    "score": 3.7636192647128563
+  },
+  {
+    "strategy_id": "bollinger_2",
+    "strategy_name": "bollinger",
+    "params": {
+      "period": 20,
+      "std_dev": 2.0
+    },
+    "return_pct": -4.1822,
+    "max_drawdown": -6.1635,
+    "total_trades": 6,
+    "win_rate": 50.0,
+    "profit_loss_ratio": 0.3719,
+    "score": 8.160747089316136
+  },
+  {
+    "strategy_id": "bollinger_3",
+    "strategy_name": "bollinger",
+    "params": {
+      "period": 20,
+      "std_dev": 2.5
+    },
+    "return_pct": 2.4949,
+    "max_drawdown": -0.6146,
+    "total_trades": 2,
+    "win_rate": 50.0,
+    "profit_loss_ratio": 6.2629,
+    "score": 12.842066465994144
+  },
+  {
+    "strategy_id": "momentum_1",
+    "strategy_name": "momentum",
+    "params": {
+      "period": 10
+    },
+    "return_pct": -25.3333,
+    "max_drawdown": -26.1372,
+    "total_trades": 35,
+    "win_rate": 31.43,
+    "profit_loss_ratio": 0.7739,
+    "score": -4.060702921353474
+  },
+  {
+    "strategy_id": "momentum_2",
+    "strategy_name": "momentum",
+    "params": {
+      "period": 20
+    },
+    "return_pct": -4.7856,
+    "max_drawdown": -10.6094,
+    "total_trades": 31,
+    "win_rate": 45.16,
+    "profit_loss_ratio": 1.1167,
+    "score": 7.094108492657455
+  },
+  {
+    "strategy_id": "momentum_3",
+    "strategy_name": "momentum",
+    "params": {
+      "period": 60
+    },
+    "return_pct": 0.9273,
+    "max_drawdown": -3.6925,
+    "total_trades": 9,
+    "win_rate": 55.56,
+    "profit_loss_ratio": 1.0407,
+    "score": 11.66232920108328
+  },
+  {
+    "strategy_id": "atr_breakout_1",
+    "strategy_name": "atr_breakout",
+    "params": {
+      "period": 10,
+      "multiplier": 1.5
+    },
+    "return_pct": 4.4031,
+    "max_drawdown": -8.3514,
+    "total_trades": 32,
+    "win_rate": 50.0,
+    "profit_loss_ratio": 1.2816,
+    "score": 12.047568690279475
+  },
+  {
+    "strategy_id": "atr_breakout_2",
+    "strategy_name": "atr_breakout",
+    "params": {
+      "period": 14,
+      "multiplier": 2.0
+    },
+    "return_pct": 17.9353,
+    "max_drawdown": -2.7373,
+    "total_trades": 26,
+    "win_rate": 57.69,
+    "profit_loss_ratio": 2.0237,
+    "score": 20.880145938333396
+  },
+  {
+    "strategy_id": "atr_breakout_3",
+    "strategy_name": "atr_breakout",
+    "params": {
+      "period": 20,
+      "multiplier": 3.0
+    },
+    "return_pct": 1.7725,
+    "max_drawdown": -7.4418,
+    "total_trades": 15,
+    "win_rate": 53.33,
+    "profit_loss_ratio": 1.1443,
+    "score": 11.560884486817706
+  },
+  {
+    "strategy_id": "donchian_1",
+    "strategy_name": "donchian",
+    "params": {
+      "period": 20
+    },
+    "return_pct": 15.9345,
+    "max_drawdown": -3.88,
+    "total_trades": 28,
+    "win_rate": 57.14,
+    "profit_loss_ratio": 1.5805,
+    "score": 19.191898969072167
+  },
+  {
+    "strategy_id": "donchian_2",
+    "strategy_name": "donchian",
+    "params": {
+      "period": 55
+    },
+    "return_pct": 4.3686,
+    "max_drawdown": -2.8094,
+    "total_trades": 16,
+    "win_rate": 56.25,
+    "profit_loss_ratio": 1.1998,
+    "score": 13.583918184665764
+  },
+  {
+    "strategy_id": "donchian_3",
+    "strategy_name": "donchian",
+    "params": {
+      "period": 100
+    },
+    "return_pct": 7.0302,
+    "max_drawdown": -2.7358,
+    "total_trades": 15,
+    "win_rate": 60.0,
+    "profit_loss_ratio": 1.2947,
+    "score": 15.712461616346223
+  },
+  {
+    "strategy_id": "volume_price_1",
+    "strategy_name": "volume_price",
+    "params": {
+      "period": 10
+    },
+    "return_pct": 4.8958,
+    "max_drawdown": -20.9836,
+    "total_trades": 71,
+    "win_rate": 50.7,
+    "profit_loss_ratio": 1.1515,
+    "score": 12.283464662498332
+  },
+  {
+    "strategy_id": "volume_price_2",
+    "strategy_name": "volume_price",
+    "params": {
+      "period": 20
+    },
+    "return_pct": -2.33,
+    "max_drawdown": -23.7275,
+    "total_trades": 67,
+    "win_rate": 49.25,
+    "profit_loss_ratio": 1.0887,
+    "score": 8.99741051206406
+  },
+  {
+    "strategy_id": "volume_price_3",
+    "strategy_name": "volume_price",
+    "params": {
+      "period": 30
+    },
+    "return_pct": -1.9779,
+    "max_drawdown": -25.3198,
+    "total_trades": 69,
+    "win_rate": 46.38,
+    "profit_loss_ratio": 1.2332,
+    "score": 8.584724980766042
+  }
+]
