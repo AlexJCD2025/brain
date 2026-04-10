@@ -1,0 +1,121 @@
+{
+  "timestamp": "2026-04-10 21:50:42.465100",
+  "strategies": [
+    "bollinger",
+    "atr_breakout",
+    "donchian",
+    "awesome_oscillator",
+    "adx",
+    "keltner_channel",
+    "ichimoku",
+    "williams_r",
+    "stochastic",
+    "vortex_indicator",
+    "dual_ma",
+    "momentum",
+    "volume_price",
+    "rsi",
+    "aroon"
+  ],
+  "portfolios": {
+    "\u6700\u5927\u590f\u666e": {
+      "weights": {
+        "bollinger": 0.06666666666666667,
+        "atr_breakout": 0.06666666666666667,
+        "donchian": 0.06666666666666667,
+        "awesome_oscillator": 0.06666666666666667,
+        "adx": 0.06666666666666667,
+        "keltner_channel": 0.06666666666666667,
+        "ichimoku": 0.06666666666666667,
+        "williams_r": 0.06666666666666667,
+        "stochastic": 0.06666666666666667,
+        "vortex_indicator": 0.06666666666666667,
+        "dual_ma": 0.06666666666666667,
+        "momentum": 0.06666666666666667,
+        "volume_price": 0.06666666666666667,
+        "rsi": 0.06666666666666667,
+        "aroon": 0.06666666666666667
+      },
+      "return_pct": -10.5494,
+      "max_drawdown": -21.2687,
+      "win_rate": 55.29,
+      "total_trades": 85
+    },
+    "\u9ad8\u6536\u76ca(15%\u6ce2\u52a8)": {
+      "weights": {
+        "bollinger": 0.06666666666666667,
+        "atr_breakout": 0.06666666666666667,
+        "donchian": 0.06666666666666667,
+        "awesome_oscillator": 0.06666666666666667,
+        "adx": 0.06666666666666667,
+        "keltner_channel": 0.06666666666666667,
+        "ichimoku": 0.06666666666666667,
+        "williams_r": 0.06666666666666667,
+        "stochastic": 0.06666666666666667,
+        "vortex_indicator": 0.06666666666666667,
+        "dual_ma": 0.06666666666666667,
+        "momentum": 0.06666666666666667,
+        "volume_price": 0.06666666666666667,
+        "rsi": 0.06666666666666667,
+        "aroon": 0.06666666666666667
+      },
+      "return_pct": -10.5494,
+      "max_drawdown": -21.2687,
+      "win_rate": 55.29,
+      "total_trades": 85
+    },
+    "\u4f4e\u98ce\u9669(10%\u6536\u76ca)": {
+      "weights": {
+        "bollinger": 0.06666666666666667,
+        "atr_breakout": 0.06666666666666667,
+        "donchian": 0.06666666666666667,
+        "awesome_oscillator": 0.06666666666666667,
+        "adx": 0.06666666666666667,
+        "keltner_channel": 0.06666666666666667,
+        "ichimoku": 0.06666666666666667,
+        "williams_r": 0.06666666666666667,
+        "stochastic": 0.06666666666666667,
+        "vortex_indicator": 0.06666666666666667,
+        "dual_ma": 0.06666666666666667,
+        "momentum": 0.06666666666666667,
+        "volume_price": 0.06666666666666667,
+        "rsi": 0.06666666666666667,
+        "aroon": 0.06666666666666667
+      },
+      "return_pct": -10.5494,
+      "max_drawdown": -21.2687,
+      "win_rate": 55.29,
+      "total_trades": 85
+    },
+    "\u7b49\u6743\u91cd": {
+      "weights": {
+        "bollinger": 0.06666666666666667,
+        "atr_breakout": 0.06666666666666667,
+        "donchian": 0.06666666666666667,
+        "awesome_oscillator": 0.06666666666666667,
+        "adx": 0.06666666666666667,
+        "keltner_channel": 0.06666666666666667,
+        "ichimoku": 0.06666666666666667,
+        "williams_r": 0.06666666666666667,
+        "stochastic": 0.06666666666666667,
+        "vortex_indicator": 0.06666666666666667,
+        "dual_ma": 0.06666666666666667,
+        "momentum": 0.06666666666666667,
+        "volume_price": 0.06666666666666667,
+        "rsi": 0.06666666666666667,
+        "aroon": 0.06666666666666667
+      },
+      "return_pct": -10.5494,
+      "max_drawdown": -21.2687,
+      "win_rate": 55.29,
+      "total_trades": 85
+    },
+    "\u98ce\u9669\u5e73\u4ef7": {
+      "weights": {},
+      "return_pct": 0.0,
+      "max_drawdown": 0.0,
+      "win_rate": 0.0,
+      "total_trades": 0
+    }
+  }
+}
