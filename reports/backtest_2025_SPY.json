@@ -1,0 +1,321 @@
+{
+  "symbol": "SPY",
+  "year": 2025,
+  "timestamp": "2026-04-10T22:37:11.599858",
+  "baseline_return": 17.9317109687712,
+  "total_strategies": 29,
+  "market_stats": {
+    "trading_days": 249,
+    "start_price": 580.9624149327,
+    "end_price": 685.138916015625,
+    "high": 689.7761694005526,
+    "low": 476.33944038650816,
+    "max_drawdown": -18.755233666641313,
+    "monthly_returns": {
+      "1月": 2.11,
+      "2月": 0.25,
+      "3月": -5.89,
+      "4月": -0.52,
+      "5月": 5.18,
+      "6月": 5.43,
+      "7月": 2.55,
+      "8月": 2.99,
+      "9月": 4.79,
+      "10月": 2.85,
+      "11月": -0.33,
+      "12月": 1.51
+    }
+  },
+  "results": [
+    {
+      "rank": 1,
+      "strategy": "ichimoku",
+      "return_pct": 7.45,
+      "max_drawdown": -4.41,
+      "win_rate": 75.0,
+      "sharpe": 1.69,
+      "trades": 4,
+      "beat_baseline": false
+    },
+    {
+      "rank": 2,
+      "strategy": "chaikin_money_flow",
+      "return_pct": 2.09,
+      "max_drawdown": -0.42,
+      "win_rate": 71.43,
+      "sharpe": 5.02,
+      "trades": 7,
+      "beat_baseline": false
+    },
+    {
+      "rank": 3,
+      "strategy": "tsi",
+      "return_pct": 1.2,
+      "max_drawdown": 0.0,
+      "win_rate": 100.0,
+      "sharpe": 0,
+      "trades": 2,
+      "beat_baseline": false
+    },
+    {
+      "rank": 4,
+      "strategy": "vwap",
+      "return_pct": 0.81,
+      "max_drawdown": -0.41,
+      "win_rate": 66.67,
+      "sharpe": 1.98,
+      "trades": 3,
+      "beat_baseline": false
+    },
+    {
+      "rank": 5,
+      "strategy": "awesome_oscillator",
+      "return_pct": 0.76,
+      "max_drawdown": -0.34,
+      "win_rate": 50.0,
+      "sharpe": 2.27,
+      "trades": 2,
+      "beat_baseline": false
+    },
+    {
+      "rank": 6,
+      "strategy": "alligator",
+      "return_pct": 0.19,
+      "max_drawdown": -1.03,
+      "win_rate": 55.56,
+      "sharpe": 0.19,
+      "trades": 9,
+      "beat_baseline": false
+    },
+    {
+      "rank": 7,
+      "strategy": "ultimate_oscillator",
+      "return_pct": 0.0,
+      "max_drawdown": 0.0,
+      "win_rate": 0.0,
+      "sharpe": 0,
+      "trades": 0,
+      "beat_baseline": false
+    },
+    {
+      "rank": 8,
+      "strategy": "rate_of_change",
+      "return_pct": -0.34,
+      "max_drawdown": -1.11,
+      "win_rate": 50.0,
+      "sharpe": -0.31,
+      "trades": 6,
+      "beat_baseline": false
+    },
+    {
+      "rank": 9,
+      "strategy": "vortex_indicator",
+      "return_pct": -0.35,
+      "max_drawdown": -0.9,
+      "win_rate": 25.0,
+      "sharpe": -0.39,
+      "trades": 4,
+      "beat_baseline": false
+    },
+    {
+      "rank": 10,
+      "strategy": "momentum",
+      "return_pct": -0.5,
+      "max_drawdown": -1.04,
+      "win_rate": 50.0,
+      "sharpe": -0.48,
+      "trades": 6,
+      "beat_baseline": false
+    },
+    {
+      "rank": 11,
+      "strategy": "rsi",
+      "return_pct": -0.53,
+      "max_drawdown": -0.53,
+      "win_rate": 0.0,
+      "sharpe": -1.0,
+      "trades": 1,
+      "beat_baseline": false
+    },
+    {
+      "rank": 12,
+      "strategy": "atr_breakout",
+      "return_pct": -1.18,
+      "max_drawdown": -1.45,
+      "win_rate": 28.57,
+      "sharpe": -0.81,
+      "trades": 7,
+      "beat_baseline": false
+    },
+    {
+      "rank": 13,
+      "strategy": "trix",
+      "return_pct": -1.24,
+      "max_drawdown": -1.59,
+      "win_rate": 42.86,
+      "sharpe": -0.78,
+      "trades": 7,
+      "beat_baseline": false
+    },
+    {
+      "rank": 14,
+      "strategy": "heikin_ashi",
+      "return_pct": -1.59,
+      "max_drawdown": -3.71,
+      "win_rate": 47.83,
+      "sharpe": -0.43,
+      "trades": 23,
+      "beat_baseline": false
+    },
+    {
+      "rank": 15,
+      "strategy": "dual_ma",
+      "return_pct": -1.85,
+      "max_drawdown": -1.85,
+      "win_rate": 16.67,
+      "sharpe": -1.0,
+      "trades": 6,
+      "beat_baseline": false
+    },
+    {
+      "rank": 16,
+      "strategy": "keltner_channel",
+      "return_pct": -2.07,
+      "max_drawdown": -2.37,
+      "win_rate": 38.46,
+      "sharpe": -0.87,
+      "trades": 13,
+      "beat_baseline": false
+    },
+    {
+      "rank": 17,
+      "strategy": "volume_price",
+      "return_pct": -2.3,
+      "max_drawdown": -3.98,
+      "win_rate": 60.0,
+      "sharpe": -0.58,
+      "trades": 35,
+      "beat_baseline": false
+    },
+    {
+      "rank": 18,
+      "strategy": "cci",
+      "return_pct": -2.39,
+      "max_drawdown": -4.24,
+      "win_rate": 42.86,
+      "sharpe": -0.56,
+      "trades": 7,
+      "beat_baseline": false
+    },
+    {
+      "rank": 19,
+      "strategy": "kdj",
+      "return_pct": -2.4,
+      "max_drawdown": -3.23,
+      "win_rate": 50.0,
+      "sharpe": -0.74,
+      "trades": 16,
+      "beat_baseline": false
+    },
+    {
+      "rank": 20,
+      "strategy": "aroon",
+      "return_pct": -2.6,
+      "max_drawdown": -2.75,
+      "win_rate": 25.0,
+      "sharpe": -0.94,
+      "trades": 12,
+      "beat_baseline": false
+    },
+    {
+      "rank": 21,
+      "strategy": "obv",
+      "return_pct": -2.78,
+      "max_drawdown": -3.63,
+      "win_rate": 35.0,
+      "sharpe": -0.77,
+      "trades": 20,
+      "beat_baseline": false
+    },
+    {
+      "rank": 22,
+      "strategy": "parabolic_sar",
+      "return_pct": -2.96,
+      "max_drawdown": -3.86,
+      "win_rate": 29.41,
+      "sharpe": -0.77,
+      "trades": 17,
+      "beat_baseline": false
+    },
+    {
+      "rank": 23,
+      "strategy": "mfi",
+      "return_pct": -2.96,
+      "max_drawdown": -2.96,
+      "win_rate": 0.0,
+      "sharpe": -1.0,
+      "trades": 1,
+      "beat_baseline": false
+    },
+    {
+      "rank": 24,
+      "strategy": "bollinger",
+      "return_pct": -3.66,
+      "max_drawdown": -3.76,
+      "win_rate": 0.0,
+      "sharpe": -0.98,
+      "trades": 2,
+      "beat_baseline": false
+    },
+    {
+      "rank": 25,
+      "strategy": "williams_r",
+      "return_pct": -3.84,
+      "max_drawdown": -4.85,
+      "win_rate": 36.36,
+      "sharpe": -0.79,
+      "trades": 11,
+      "beat_baseline": false
+    },
+    {
+      "rank": 26,
+      "strategy": "stochastic",
+      "return_pct": -3.84,
+      "max_drawdown": -4.85,
+      "win_rate": 36.36,
+      "sharpe": -0.79,
+      "trades": 11,
+      "beat_baseline": false
+    },
+    {
+      "rank": 27,
+      "strategy": "donchian",
+      "return_pct": -4.3,
+      "max_drawdown": -4.83,
+      "win_rate": 26.09,
+      "sharpe": -0.89,
+      "trades": 23,
+      "beat_baseline": false
+    },
+    {
+      "rank": 28,
+      "strategy": "adx",
+      "return_pct": -4.58,
+      "max_drawdown": -4.77,
+      "win_rate": 12.5,
+      "sharpe": -0.96,
+      "trades": 8,
+      "beat_baseline": false
+    },
+    {
+      "rank": 29,
+      "strategy": "macd",
+      "return_pct": -4.6,
+      "max_drawdown": -5.34,
+      "win_rate": 36.84,
+      "sharpe": -0.86,
+      "trades": 19,
+      "beat_baseline": false
+    }
+  ]
+}

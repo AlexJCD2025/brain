@@ -1,0 +1,321 @@
+{
+  "symbol": "000001.SS",
+  "year": 2025,
+  "timestamp": "2026-04-10T22:37:10.270170",
+  "baseline_return": 18.4345356481709,
+  "total_strategies": 29,
+  "market_stats": {
+    "trading_days": 242,
+    "start_price": 3347.93896484375,
+    "end_price": 3965.115966796875,
+    "high": 4034.0791015625,
+    "low": 3040.693115234375,
+    "max_drawdown": -9.714475630597963,
+    "monthly_returns": {
+      "1月": -2.91,
+      "2月": 1.55,
+      "3月": 0.22,
+      "4月": -1.85,
+      "5月": 1.59,
+      "6月": 3.12,
+      "7月": 3.7,
+      "8月": 8.12,
+      "9月": 0.34,
+      "10月": 1.45,
+      "11月": -1.66,
+      "12月": 1.82
+    }
+  },
+  "results": [
+    {
+      "rank": 1,
+      "strategy": "dual_ma",
+      "return_pct": 0.0,
+      "max_drawdown": 0.0,
+      "win_rate": 0.0,
+      "sharpe": 0,
+      "trades": 0,
+      "beat_baseline": false
+    },
+    {
+      "rank": 2,
+      "strategy": "macd",
+      "return_pct": 0.0,
+      "max_drawdown": 0.0,
+      "win_rate": 0.0,
+      "sharpe": 0,
+      "trades": 0,
+      "beat_baseline": false
+    },
+    {
+      "rank": 3,
+      "strategy": "rsi",
+      "return_pct": 0.0,
+      "max_drawdown": 0.0,
+      "win_rate": 0.0,
+      "sharpe": 0,
+      "trades": 0,
+      "beat_baseline": false
+    },
+    {
+      "rank": 4,
+      "strategy": "bollinger",
+      "return_pct": 0.0,
+      "max_drawdown": 0.0,
+      "win_rate": 0.0,
+      "sharpe": 0,
+      "trades": 0,
+      "beat_baseline": false
+    },
+    {
+      "rank": 5,
+      "strategy": "momentum",
+      "return_pct": 0.0,
+      "max_drawdown": 0.0,
+      "win_rate": 0.0,
+      "sharpe": 0,
+      "trades": 0,
+      "beat_baseline": false
+    },
+    {
+      "rank": 6,
+      "strategy": "atr_breakout",
+      "return_pct": 0.0,
+      "max_drawdown": 0.0,
+      "win_rate": 0.0,
+      "sharpe": 0,
+      "trades": 0,
+      "beat_baseline": false
+    },
+    {
+      "rank": 7,
+      "strategy": "donchian",
+      "return_pct": 0.0,
+      "max_drawdown": 0.0,
+      "win_rate": 0.0,
+      "sharpe": 0,
+      "trades": 0,
+      "beat_baseline": false
+    },
+    {
+      "rank": 8,
+      "strategy": "volume_price",
+      "return_pct": 0.0,
+      "max_drawdown": 0.0,
+      "win_rate": 0.0,
+      "sharpe": 0,
+      "trades": 0,
+      "beat_baseline": false
+    },
+    {
+      "rank": 9,
+      "strategy": "kdj",
+      "return_pct": 0.0,
+      "max_drawdown": 0.0,
+      "win_rate": 0.0,
+      "sharpe": 0,
+      "trades": 0,
+      "beat_baseline": false
+    },
+    {
+      "rank": 10,
+      "strategy": "cci",
+      "return_pct": 0.0,
+      "max_drawdown": 0.0,
+      "win_rate": 0.0,
+      "sharpe": 0,
+      "trades": 0,
+      "beat_baseline": false
+    },
+    {
+      "rank": 11,
+      "strategy": "williams_r",
+      "return_pct": 0.0,
+      "max_drawdown": 0.0,
+      "win_rate": 0.0,
+      "sharpe": 0,
+      "trades": 0,
+      "beat_baseline": false
+    },
+    {
+      "rank": 12,
+      "strategy": "ichimoku",
+      "return_pct": 0.0,
+      "max_drawdown": 0.0,
+      "win_rate": 0.0,
+      "sharpe": 0,
+      "trades": 0,
+      "beat_baseline": false
+    },
+    {
+      "rank": 13,
+      "strategy": "parabolic_sar",
+      "return_pct": 0.0,
+      "max_drawdown": 0.0,
+      "win_rate": 0.0,
+      "sharpe": 0,
+      "trades": 0,
+      "beat_baseline": false
+    },
+    {
+      "rank": 14,
+      "strategy": "obv",
+      "return_pct": 0.0,
+      "max_drawdown": 0.0,
+      "win_rate": 0.0,
+      "sharpe": 0,
+      "trades": 0,
+      "beat_baseline": false
+    },
+    {
+      "rank": 15,
+      "strategy": "adx",
+      "return_pct": 0.0,
+      "max_drawdown": 0.0,
+      "win_rate": 0.0,
+      "sharpe": 0,
+      "trades": 0,
+      "beat_baseline": false
+    },
+    {
+      "rank": 16,
+      "strategy": "mfi",
+      "return_pct": 0.0,
+      "max_drawdown": 0.0,
+      "win_rate": 0.0,
+      "sharpe": 0,
+      "trades": 0,
+      "beat_baseline": false
+    },
+    {
+      "rank": 17,
+      "strategy": "vwap",
+      "return_pct": 0.0,
+      "max_drawdown": 0.0,
+      "win_rate": 0.0,
+      "sharpe": 0,
+      "trades": 0,
+      "beat_baseline": false
+    },
+    {
+      "rank": 18,
+      "strategy": "stochastic",
+      "return_pct": 0.0,
+      "max_drawdown": 0.0,
+      "win_rate": 0.0,
+      "sharpe": 0,
+      "trades": 0,
+      "beat_baseline": false
+    },
+    {
+      "rank": 19,
+      "strategy": "heikin_ashi",
+      "return_pct": 0.0,
+      "max_drawdown": 0.0,
+      "win_rate": 0.0,
+      "sharpe": 0,
+      "trades": 0,
+      "beat_baseline": false
+    },
+    {
+      "rank": 20,
+      "strategy": "trix",
+      "return_pct": 0.0,
+      "max_drawdown": 0.0,
+      "win_rate": 0.0,
+      "sharpe": 0,
+      "trades": 0,
+      "beat_baseline": false
+    },
+    {
+      "rank": 21,
+      "strategy": "aroon",
+      "return_pct": 0.0,
+      "max_drawdown": 0.0,
+      "win_rate": 0.0,
+      "sharpe": 0,
+      "trades": 0,
+      "beat_baseline": false
+    },
+    {
+      "rank": 22,
+      "strategy": "ultimate_oscillator",
+      "return_pct": 0.0,
+      "max_drawdown": 0.0,
+      "win_rate": 0.0,
+      "sharpe": 0,
+      "trades": 0,
+      "beat_baseline": false
+    },
+    {
+      "rank": 23,
+      "strategy": "chaikin_money_flow",
+      "return_pct": 0.0,
+      "max_drawdown": 0.0,
+      "win_rate": 0.0,
+      "sharpe": 0,
+      "trades": 0,
+      "beat_baseline": false
+    },
+    {
+      "rank": 24,
+      "strategy": "keltner_channel",
+      "return_pct": 0.0,
+      "max_drawdown": 0.0,
+      "win_rate": 0.0,
+      "sharpe": 0,
+      "trades": 0,
+      "beat_baseline": false
+    },
+    {
+      "rank": 25,
+      "strategy": "rate_of_change",
+      "return_pct": 0.0,
+      "max_drawdown": 0.0,
+      "win_rate": 0.0,
+      "sharpe": 0,
+      "trades": 0,
+      "beat_baseline": false
+    },
+    {
+      "rank": 26,
+      "strategy": "tsi",
+      "return_pct": 0.0,
+      "max_drawdown": 0.0,
+      "win_rate": 0.0,
+      "sharpe": 0,
+      "trades": 0,
+      "beat_baseline": false
+    },
+    {
+      "rank": 27,
+      "strategy": "vortex_indicator",
+      "return_pct": 0.0,
+      "max_drawdown": 0.0,
+      "win_rate": 0.0,
+      "sharpe": 0,
+      "trades": 0,
+      "beat_baseline": false
+    },
+    {
+      "rank": 28,
+      "strategy": "awesome_oscillator",
+      "return_pct": 0.0,
+      "max_drawdown": 0.0,
+      "win_rate": 0.0,
+      "sharpe": 0,
+      "trades": 0,
+      "beat_baseline": false
+    },
+    {
+      "rank": 29,
+      "strategy": "alligator",
+      "return_pct": 0.0,
+      "max_drawdown": 0.0,
+      "win_rate": 0.0,
+      "sharpe": 0,
+      "trades": 0,
+      "beat_baseline": false
+    }
+  ]
+}
